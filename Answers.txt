@@ -1,0 +1,223 @@
+Terraform Fundamentals (5 questions)
+
+
+
+
+
+What is Terraform and how does it differ from other IaC tools?
+
+## answer
+
+Terraform is an open-source Infrastructure as Code (IaC) tool developed by HashiCorp. It allows you to define and provision infrastructure using a declarative configuration language, HCL (HashiCorp Configuration Language). Terraform differs from other IaC tools in several key ways:
+
+
+
+Declarative vs. Imperative: Terraform uses a declarative approach, where you describe the desired state of your infrastructure, and Terraform figures out how to achieve that state. Other tools, like Ansible, use an imperative approach, where you provide a series of steps to execute.
+
+
+
+State Management: Terraform maintains a state file that tracks the resources it manages. This allows Terraform to understand the current state of your infrastructure and make incremental changes. While other tools like CloudFormation also maintain state, Terraform's state file is explicit, portable, and cloud-agnostic.
+
+
+
+Provider Ecosystem: Terraform has a rich ecosystem of providers that allow you to manage resources across multiple cloud providers, including AWS, Azure, and Google Cloud. Other tools, like CloudFormation, are specific to a single cloud provider.
+
+
+
+Explain Terraform's declarative nature and state management.
+
+## answer 
+
+Terraform's declarative nature means that you describe the desired state of your infrastructure, and Terraform figures out how to achieve that state. This is different from an imperative approach, where you provide a series of steps to execute. Terraform's state management means that it maintains a state file that tracks the resources it manages. This allows Terraform to understand the current state of your infrastructure and make incremental changes. The state file acts as a source of truth for what resources exist and their current configuration.
+
+
+
+What is the purpose of the Terraform provider?
+
+## answer
+
+The Terraform provider is a plugin that allows Terraform to interact with a specific cloud provider or service. It is responsible for creating, updating, and deleting resources in that provider. Providers translate Terraform's configuration into API calls to the target platform.
+
+
+
+How does Terraform handle dependency resolution?
+
+## answer
+
+Terraform handles dependency resolution by analyzing the dependencies between resources in your configuration file. It builds a dependency graph and determines the order in which to create, update, and delete resources. Terraform also supports parallel execution of independent resources, which can significantly reduce the time it takes to provision infrastructure. Dependencies can be implicit through resource references or explicit using depends_on.
+
+
+
+What are the key components of a Terraform configuration file?
+
+## answer
+
+The key components of a Terraform configuration file are:
+
+
+
+Providers: Plugins that allow Terraform to interact with specific cloud providers or services.
+
+
+
+Resources: Infrastructure components that Terraform manages, such as EC2 instances, VPCs, and databases.
+
+
+
+Variables: Values that can be passed to Terraform to customize the configuration.
+
+
+
+Outputs: Values that can be exported from Terraform to be used by other tools or systems.
+
+
+
+Data Sources: Allow Terraform to fetch information from existing resources.
+
+
+
+Modules: Containers for multiple resources that are used together.
+
+
+
+State Management & Backend Configuration (3 questions)
+
+
+
+
+
+Explain the difference between terraform refresh, terraform plan, and terraform apply.
+
+## answer
+
+terraform refresh: Updates the state file to match the current state of the infrastructure without making any changes to actual resources.
+
+terraform plan: Creates an execution plan showing what changes Terraform will make to the infrastructure, comparing the desired state in configuration files with the current state.
+
+terraform apply: Applies the changes to the infrastructure, creating, updating, or deleting resources as needed to match the desired state.
+
+
+
+What is the difference between local and remote backends?
+
+## answer
+
+Local backends store the state file on the local machine where Terraform is running, while remote backends store the state file in a remote location, such as an S3 bucket, Azure Storage, or a Terraform Cloud workspace. Remote backends enable team collaboration, state locking, and better security.
+
+
+
+How can you prevent state corruption when multiple engineers work on the same infrastructure?
+
+## answer
+
+Use a remote backend with state locking. State locking prevents concurrent modifications to the state file by ensuring only one operation can modify the state at a time. Backends like S3 with DynamoDB or Terraform Cloud provide built-in state locking capabilities.
+
+
+
+Terraform Modules & Reusability (4 questions)
+
+
+
+
+
+What are the benefits of using Terraform modules?
+
+## answer
+
+The benefits of using Terraform modules are that they promote code reusability, they are versionable allowing for controlled updates, they are shareable across teams and projects, they are maintainable with centralized updates, they enforce standardization and best practices, and they simplify complex infrastructure by abstracting configuration details.
+
+Explain how to pass variables to a Terraform module.
+
+## answer
+
+Variables are passed to a Terraform module by defining input values in the module block using key-value pairs where the variable name is used directly without any prefix. The module must declare these input variables in its variables.tf file to accept them.
+
+
+
+What is the difference between count and for_each?
+
+## answer
+
+count is used to create multiple instances of a resource based on a numeric value and references them by index, while for_each is used to create multiple instances of a resource based on a map or a set and references them by their keys. for_each is generally preferred because it creates more stable resource addresses that don't change when items are added or removed from the middle of a collection.
+
+
+
+How do you source a module from a Git repository?
+
+## answer
+
+Use the source keyword followed by the Git repository URL. You can also specify a branch, tag, or commit by appending a ref parameter to the URL.
+
+
+
+Terraform with AWS (4 questions)
+
+
+
+How do you create an EC2 instance with Terraform?
+
+## answer
+
+Define an aws_instance resource in your Terraform configuration file. Required arguments include ami which is the Amazon Machine Image ID and instance_type which specifies the instance size.
+
+
+
+What are the required fields for defining a VPC in Terraform?
+
+## answer
+
+The only required field for defining a VPC in Terraform is cidr_block which specifies the CIDR block for the VPC. Optional but commonly used fields include enable_dns_support, enable_dns_hostnames, and tags.
+
+
+
+Explain how Terraform manages IAM policies in AWS.
+
+## answer
+
+Terraform manages IAM policies in AWS by creating and managing IAM resources such as aws_iam_policy, aws_iam_role, aws_iam_user, and aws_iam_group. You can define policies using JSON documents inline or reference existing policy ARNs. Terraform also manages policy attachments using resources like aws_iam_role_policy_attachment to connect policies to roles, users, or groups.
+
+
+
+How do you use Terraform to provision and attach an Elastic Load Balancer?
+
+## answer
+
+Define an aws_lb resource for Application or Network Load Balancer and an aws_lb_target_group resource. Create aws_lb_listener to define how the load balancer routes traffic, and aws_lb_target_group_attachment to register targets like EC2 instances with the target group.
+
+
+
+Debugging & Error Handling (4 questions)
+
+
+
+
+
+What does the terraform validate command do?
+
+##  answer
+
+The terraform validate command checks the syntax and semantics of your Terraform configuration files to ensure they are internally consistent and properly formatted. It validates the configuration without accessing remote services or state.
+
+
+
+How can you debug Terraform errors effectively?
+
+## answer
+
+Use the terraform plan command to see the changes and identify issues before applying, enable detailed logging with TF_LOG environment variable set to TRACE, DEBUG, INFO, WARN, or ERROR, review error messages carefully for specific resource or syntax issues, use terraform validate to check configuration syntax, and examine the state file to understand the current infrastructure state.
+
+
+
+What is Terraform's ignore_changes lifecycle policy used for?
+
+## answer
+
+The ignore_changes lifecycle policy is used to prevent Terraform from detecting and attempting to revert changes to specific resource attributes that may be modified outside of Terraform. This is useful when certain attributes are managed by external processes or auto-scaling mechanisms.
+
+
+
+How do you import existing AWS infrastructure into Terraform?
+
+## answer
+
+First write the Terraform configuration for the resource you want to import, then use the terraform import command with the resource address and the AWS resource ID. After importing, run terraform plan to ensure the configuration matches the imported resource's actual state.
