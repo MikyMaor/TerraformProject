@@ -174,7 +174,7 @@ terraform destroy
 
 ## 📚 Additional Notes
 
-`Answers.txt` contains Terraform exam-related questions and answers covering:
+`EXAM_Answers.docx` contains Terraform exam-related questions and answers covering:
 
 * Core concepts
 * State management
