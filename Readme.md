@@ -1,118 +1,113 @@
-# Terraform AWS Infrastructure Exam
+# 🚀 Terraform AWS Infrastructure Project
 
-This repository demonstrates Terraform configurations for deploying AWS cloud infrastructure. The project is divided into foundational setup (Tasks 1 & 2) and advanced modular architecture (Tasks 3, 4 & 5).
+This repository demonstrates building AWS infrastructure using **Terraform**, progressing from a basic setup to a fully modular, auto-scaled architecture.
+The project is divided into **foundational tasks (1–2)** and **advanced infrastructure tasks (3–5)**.
 
-## Project Structure
+---
 
+## 📁 Project Structure
+
+```
 Terraform_Exam/
-├── Tasks1_2/              # Foundational VPC and EC2 configuration
-├── Tasks3_4_5/            # Advanced modular setup
+├── Tasks 1 & 2/                 # Basic VPC & EC2 setup
+├── Tasks 3 & 4/
 │   └── Modules/
-│       ├── Custom_vpc_ec2/    # VPC, networking, and compute resources
-│       ├── LB_TG_AS/          # Load balancing and auto-scaling
-│       └── Deployments/       # Main deployment orchestration
-└── Answers.txt            # Terraform knowledge base and exam responses
+│       ├── Custom_vpc_ec2/   # VPC, subnets & base EC2
+│       ├── LB_TG_AS/         # Load Balancer & Auto Scaling
+│       └── Deployments/      # Full environment orchestration
+└── Answers.txt               # Terraform exam A
+```
 
-## Tasks 1 & 2: Foundational Infrastructure
+---
 
-Basic Terraform configuration that provisions:
+## 🧱 Tasks 1 & 2 – Basic Infrastructure
 
-- Virtual Private Cloud with public subnet (10.0.1.0/24) and private subnet (10.0.2.0/24)
-- Internet Gateway with routing configured for the public subnet
-- Security Group permitting SSH access (port 22) and HTTP traffic (port 80)
-- EC2 Instance of type t3.micro deployed in the public subnet with public IP assignment
+Terraform configuration that provisions:
 
-Run from the Tasks1_2 directory
+* 🌐 VPC with:
 
-## Tasks 3, 4 & 5: Advanced Modular Architecture
+  * Public subnet: `10.0.1.0/24`
+  * Private subnet: `10.0.2.0/24`
+* 🌍 Internet Gateway with public routing
+* 🔐 Security Group (SSH 22, HTTP 80)
+* 🖥️ EC2 instance (`t3.micro`) with public IP
 
-Enterprise-grade infrastructure featuring auto-scaling web servers managed by a load balancer.
+📍 Run from the `Tasks 1 & 2` directory.
 
-### Module 1: Custom_vpc_ec2
+---
 
-Establishes VPC infrastructure with a pre-configured EC2 instance.
+## 🏗️ Tasks 3 & 4 – Modular & Scalable Setup
 
-Main Capabilities:
+Advanced, production-style infrastructure using Terraform modules.
 
-- Dynamic subnet provisioning across multiple availability zones (configurable quantity)
-- Automatic SSH key pair generation (stored as id_rsa_generated.pem)
-- EC2 instance pre-installed with Nginx web server and stress-ng testing utility
-- Default health check page displaying "Healthy" status
-- Exports: VPC identifier, subnet identifiers, security group identifier, instance identifier, key pair name
+---
 
-### Module 2: LB_TG_AS
+### 🔹 Module: Custom_vpc_ec2
 
-Auto-scaling infrastructure with intelligent load distribution.
+* Creates VPC and multiple subnets (AZ-based, configurable)
+* Generates SSH key pair (`id_rsa_generated.pem`)
+* Launches EC2 with **Nginx** and **stress-ng**
+* Health endpoint returns `Healthy`
+* Outputs VPC, subnet, SG, EC2 IDs and key name
 
-Primary Components:
+---
 
-- Application Load Balancer - Publicly accessible, manages traffic distribution
-- Target Group - Monitors instance health on port 80 using root path
-- Custom AMI - Generated from the base EC2 instance (pre-configured with Nginx)
-- Launch Template - Executes CPU stress testing after a 3-minute initialization delay
-- Auto Scaling Group - Maintains between 1 and 3 instances, starting with 1
-- Scaling Policy - Implements target tracking based on 50% CPU threshold
+### 🔹 Module: LB_TG_AS
 
-Auto-Scaling Mechanism:
+* Public Application Load Balancer
+* Target Group with HTTP health checks
+* Custom AMI built from base EC2
+* Launch Template with delayed CPU stress test
+* Auto Scaling Group (1–3 instances)
+* CPU target tracking at **50%**
 
-- Newly launched instances initiate CPU load using stress-ng for 10 minutes
-- When average CPU exceeds 50%: Additional instances are launched
-- When average CPU falls below 50%: Excess instances are terminated
-- Always maintains at least 1 instance
+📈 Behavior:
 
-### Module 3: Deployments
+* CPU load starts after ~3 minutes
+* Scales out when CPU > 50%
+* Scales in when CPU < 50%
+* Minimum of 1 running instance
 
-Coordinates the complete deployment by integrating both modules.
+---
 
-Deployment Sequence:
+### 🔹 Module: Deployments
 
-- Establishes VPC with 3 subnets, security group configuration, and initial EC2 instance
-- Transfers VPC resources to the LB_TG_AS module
-- Provisions load balancer, creates AMI, and configures auto-scaling group
-- Implements CPU-based scaling policies
+* Connects all modules together
+* Creates VPC, EC2, ALB, AMI and ASG
+* Applies CPU-based scaling policies
 
-## Usage
+---
 
-Prerequisites:
-- Terraform version 1.0 or higher
-- AWS CLI configured with valid credentials
-- Sufficient AWS permissions for resource creation
+## ▶️ Usage
 
-Deployment Instructions:
+### Prerequisites
 
-Tasks 1 & 2:
-Navigate to Tasks1_2 directory
-Initialize Terraform
-Review the planned changes
-Apply the configuration
+* Terraform `>= 1.0`
+* AWS CLI configured
+* Sufficient AWS permissions
 
-Tasks 3, 4 & 5:
-Navigate to Tasks3_4_5/Modules/Deployments directory
-Initialize Terraform
-Review the planned changes
-Apply the configuration
+### Deploy
 
-## Testing Auto-Scaling
+**Tasks 1 & 2**
 
-Retrieve the load balancer DNS name from Terraform outputs
+```bash
+cd Tasks\ 1\ \&\ 2
+terraform init
+terraform apply
+```
 
-Test the application endpoint:
-Access the load balancer URL in your browser or using curl
-Expected response: Healthy status message
+**Tasks 3 & 4**
 
-Monitor the infrastructure using AWS Console:
-- CloudWatch: View CPU utilization metrics
-- EC2 Dashboard: Observe new instances being launched
-- Target Group: Check instance registration status
+```bash
+cd Tasks\ 3\ \&\ 4 /Modules/Deployments
+terraform init
+terraform apply
+```
 
-Expected Behavior Timeline:
+---
 
-Approximately 3 minutes: CPU load generation begins
-Around 5-10 minutes: Instance count scales up to 3
-Approximately 13 minutes: CPU load generation stops
-Around 15-20 minutes: Instance count scales down to 1
 
-## Architecture Overview
+### 🗺️ Architecture Diagram
 
                     Internet
                        │
@@ -132,48 +127,57 @@ Around 15-20 minutes: Instance count scales down to 1
     │ EC2   │      │ EC2   │      │ EC2   │
     │Nginx  │      │Nginx  │      │Nginx  │
     └───────┘      └───────┘      └───────┘
-    
-    Auto Scaling Group (1-3 instances)
-    Triggers scaling at 50% CPU utilization
 
-## Key Concepts Demonstrated
+    Auto Scaling Group (1–3 instances)
+    CPU-based scaling at 50%
 
-✅ Modular Terraform design patterns
-✅ Dynamic resource provisioning using count parameter
-✅ Multi-availability zone deployment for high availability
-✅ Auto-scaling with target tracking policies
-✅ Custom AMI generation from running instances
-✅ Remote provisioning using SSH
-✅ Load balancing with automated health checks
-✅ Infrastructure as Code industry best practices
 
-## Resource Cleanup
+## 🔍 Testing Auto Scaling
 
-Tasks 1 & 2:
-Navigate to Tasks1_2 directory
-Execute Terraform destroy command
+* Access the Load Balancer DNS from Terraform outputs
+* Expected response: ✅ `Healthy`
 
-Tasks 3, 4 & 5:
-Navigate to Tasks3_4_5/Modules/Deployments directory
-Execute Terraform destroy command
+Monitor via AWS Console:
 
-Important Note: AMI resources may require manual deregistration if automated cleanup fails.
+* CloudWatch – CPU metrics
+* EC2 – instance count
+* Target Group – health status
 
-## Additional Resources
+⏱️ Timeline:
 
-The Answers.txt file contains comprehensive Terraform exam questions and answers covering:
-- Terraform fundamentals and core concepts
-- State management strategies
-- Module development and usage
-- AWS service configurations
-- Debugging and troubleshooting techniques
+* ~3 min: CPU load starts
+* ~5–10 min: scales up to 3 instances
+* ~15–20 min: scales back to 1 instance
 
-## Learning Outcomes
+---
 
-This project provides hands-on experience with:
-- VPC networking and subnet design
-- EC2 instance provisioning and configuration
-- Terraform module architecture
-- Auto-scaling group implementation
-- Load balancer configuration and management
-- Infrastructure as Code best practices for AWS cloud environments
+## 🧠 Key Concepts
+
+* Modular Terraform design
+* Multi-AZ deployments
+* Auto Scaling with target tracking
+* Custom AMI creation
+* Load balancing & health checks
+* Infrastructure as Code best practices
+
+---
+
+## 🧹 Cleanup
+
+```bash
+terraform destroy
+```
+
+⚠️ Note: In some cases, AMIs may require manual deregistration.
+
+---
+
+## 📚 Additional Notes
+
+`Answers.txt` contains Terraform exam-related questions and answers covering:
+
+* Core concepts
+* State management
+* Modules
+* AWS integrations
+* Troubleshooting
