@@ -1,5 +1,15 @@
 # 🚀 Terraform AWS Infrastructure Project
 
+## Final exam — `final-exam/builder`
+
+| Component | Status |
+|-----------|--------|
+| `final-exam/builder/` EC2 in VPC `vpc-044604d0bfb707142` | ✅ Done |
+| Git Flow branches (`main`, `dev`, feature) | ✅ Done |
+| `terraform apply` on AWS | ❌ Run manually |
+
+---
+
 This repository demonstrates building AWS infrastructure using **Terraform**, progressing from a basic setup to a fully modular, auto-scaled architecture.
 The project is divided into **foundational tasks (1–2)** and **advanced infrastructure tasks (3–5)**.
 
